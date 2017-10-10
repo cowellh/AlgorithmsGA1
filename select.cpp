@@ -1,49 +1,95 @@
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 using namespace std;
 
-// int arrayCompare(ifstream* ) 
-
-int main() {
-  ifstream in_file;
-  in_file.open("1.dat", ios::in | ios::binary);
-  cout << in_file.read(in_file.seekg(0), sizeof( int)) << endl;
-  int* test = in_file.seekg(0);
-  cout << test << endl;
-  int value;
-  char* pmemory = ( char* ) &value;
-  //char a[4];
-  //in_file.read(a, 4);
-  //cout << a << endl;
-
-
-  in_file.read(pmemory, sizeof(int));
-  cout << value << endl;
-  in_file.read(pmemory, sizeof(int));
-  cout << value << endl;
-  in_file.read(pmemory, sizeof(int));
-  cout << value << endl;
-  in_file.read(pmemory, sizeof(int));
-  cout << value << endl;
- //cout << a << endl;
-
-//  in_file.get();
-//  in_file.get();
-//  int first = in_file.get();
-//  int second = in_file.get();
-//  int actual = first + second;
-//  cout << actual << endl;
-
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  cout << in_file.get() << endl;
-  in_file.close();
-  return 0;
+int getInt(ifstream &inFile, int pos){
+	int num = 0;
+	char tempC;
+	int tempI = 0;
+	for(int i = 1; i <= 8; i++){
+		inFile.get(tempC);
+		
+		//This if makes sure new line characters are skipped
+		if(tempC == '\n')
+			inFile.get(tempC);
+		
+		//This block converts the hex digit into decimal
+		if(tempC == 'a')
+			tempI = 10;
+		else if(tempC == 'b')
+			tempI = 11;
+		else if(tempC == 'c')
+			tempI = 12;
+		else if(tempC == 'd')
+			tempI = 13;
+		else if(tempC == 'e')
+			tempI = 14;
+		else if(tempC == 'f')
+			tempI = 15;
+		for(int j = 0; j < 10; j++){
+			if((int)tempC == 48+j)
+				tempI = j;
+		}
+		
+		//Adds the current digit to the total
+		num = num + (tempI * pow( 16 , (8 - i) ));
+	}
 }
+
+int main(){
+	system("xxd -ps 1.dat 1.txt");
+	ifstream inFile("1.txt", ios::in);
+	
+	for(int i=0; i<10; i++)
+	cout << getInt(inFile, 5) << endl;
+}
+
+
+/*int main() {
+	system("xxd -ps 1.dat 1.txt");
+	ifstream inFile("1.txt", ios::in);
+ 
+char tempC;
+  int tempI;
+  int num = 0;
+
+  while(inFile){
+  num = 0;
+  for(int i = 1; i <= 8; i++){
+   inFile.get(tempC);
+   if(tempC == '\n')
+     inFile.get(tempC);
+
+   if(tempC == 'a')
+    tempI = 10;
+   else if(tempC == 'b')
+    tempI = 11;
+   else if(tempC == 'c')
+    tempI = 12;
+   else if(tempC == 'd')
+    tempI = 13;
+   else if(tempC == 'e')
+    tempI = 14;
+   else if(tempC == 'f')
+    tempI = 15;
+   for(int j = 0; j < 10; j++){
+     if((int)tempC == 48+j)
+       tempI = j;
+   }
+
+   //cout << i << ": " << tempI << endl;
+   num = num + (tempI * pow( 16 , (8 - i) )); 
+  }
+
+  cout << num << endl;
+}
+
+  return 0;
+}*/
+
+
